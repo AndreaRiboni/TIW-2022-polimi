@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <!-- Font Awesome -->
+        <link
+                href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+                rel="stylesheet"
+        />
+        <!-- Google Fonts -->
+        <link
+                href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+                rel="stylesheet"
+        />
+        <!-- MDB -->
+        <link
+                href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.11.0/mdb.min.css"
+                rel="stylesheet"
+        />
+        <!-- MDB -->
+        <script
+                type="text/javascript"
+                src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.11.0/mdb.min.js"
+        ></script>
+        <link
+                href="style.css"
+                rel="stylesheet"
+        />
+        <!-- font -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap" rel="stylesheet">
+
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Image Gallery - Homepage</title>
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
+            <div class="container-fluid">
+                <div class="navbar-brand">Image Gallery</div>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="./ShowHomepage">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="./Logout">Logout</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div>
+            <div class="display-5 text-center" th:text="${selected_album.getTitle()}">
+                album title
+            </div>
+
+            <div class="lead" th:if="${album_photos.isEmpty()}">
+                No photos to display
+            </div>
+
+            <div th:if="${!album_photos.isEmpty()}" class="container text-center d-flex justify-content-center align-items-center">
+                <span th:if="${!start_index==0}">
+                    <a th:href="@{./ShowAlbum(album_id=${selected_album.getId()},start_index=${start_index -5})}"><i class="fas fa-angle-left fa-3x"></i></a>
+                </span>
+                <span th:if="${counter.increment() <= 5}" th:each="photo : ${album_photos}" class="thumbnail-margin">
+                    <a th:href="@{./ShowAlbum(album_id=${selected_album.getId()},start_index=${start_index},photo_id=${photo.getId()})}">
+                        <img th:alt="${photo.getAltText()}" th:src="@{./DownloadPhoto(imageId=${photo.getPath()})}" height="100" class="img rounded-7 maxwidth-thumbnail"/>
+                        <div th:text="${photo.getTitle()}">photo title</div>
+                    </a>
+                </span>
+                <span th:if="${counter.increment() > 6}">
+                    <a th:href="@{./ShowAlbum(album_id=${selected_album.getId()},start_index=${start_index +5})}"><i class="fas fa-angle-right fa-3x"></i></a>
+                </span>
+            </div>
+        </div>
+
+        <div class="container card mt-4" th:if="${selected_photo != null}">
+            <div class="text-center card-title display-6" th:text="${selected_photo.getTitle()}"> Title </div>
+            <div class="lead text-center">(<span th:text="${selected_photo.getUploadDate()}"> Upload date </span>)</div>
+            <img class="img-fluid" th:alt="${selected_photo.getAltText()}" th:src="@{./DownloadPhoto(imageId=${selected_photo.getPath()})}"/>
+            <div class="p text-center" th:text="${selected_photo.getAltText()}"> Alt </div>
+
+            <div class="card-footer bg-light mt-2">
+                <div class="text-center card-title lead"><i class="far fa-comment-alt"></i> Add comment</div>
+                <form class="row gy-2 gx-3 d-flex justify-content-center align-items-center" method="POST" action="./AddComment">
+                    <div class="col-auto">
+                        <input type="text" hidden th:value="${selected_photo.getId()}" name="photo-id"/>
+                        <input type="text" hidden th:value="${selected_album.getId()}" name="album-id"/>
+                        <input type="text" class="form-control" name="comment" placeholder="Comment" required/>
+                    </div>
+                    <div class="col-auto">
+                        <input type="submit" class="btn btn-danger" name="add-comment" value="add"/>
+                    </div>
+                </form>
+
+                <div th:if="${!comments.isEmpty()}">
+                    <div class="d-flex flex-start" th:each="comment : ${comments}">
+                        <div class="rounded-circle shadow-1-strong me-3 d-flex justify-content-center align-items-center avatar-preview h1 bg-danger text-white"
+                             th:text="${#strings.toUpperCase(#strings.substring(comment.getUsername(),0,1))}"
+                        >A</div>
+                        <div>
+                            <h6 class="fw-bold mb-1" th:text="${comment.getUsername()}">User</h6>
+                            <div class="d-flex align-items-center mb-0">
+                                <p th:text="${comment.getTimestamp()}" class="mb-0">
+                                    data
+                                </p>
+                            </div>
+                            <p th:text="${comment.getText()}" class="mb-4">
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div th:if="${comments.isEmpty()}">
+                    No one has commented yet
+                </div>
+            </div>
+        </div>
+
+        <footer class="text-center text-lg-start bg-light text-muted" th:if="${available_photos != null && !available_photos.isEmpty()}">
+            <section class="d-flex justify-content-center justify-content-lg-between p-4 border-bottom" >
+                <div class="me-5 d-none d-lg-block">
+                    ImageGallery
+                </div>
+            </section>
+
+            <section>
+                <div class="container text-center text-md-start mt-5 mb-2">
+                    <div class="row mt-3">
+                        <div class="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4">
+                            <h6 class="text-uppercase fw-bold mb-4">
+                                <i class="far fa-images"></i> Add a photo in '<span th:text="${selected_album.getTitle()}">album title</span>'
+                            </h6>
+                            <form class="row row-cols-lg-auto g-3 align-items-center" method="POST" action="./AddToAlbum">
+                                <label for="photo">Choose a photo:</label>
+                                <input type="text" hidden th:value="${selected_album.getId()}" name="album-id"/>
+                                <select name="photo-id" id="photo" required>
+                                    <option th:each="option : ${available_photos}" th:value="${option.getId()}" th:text="|${option.getId()} - ${option.getTitle()}|"></option>
+                                </select>
+                                <input type="submit" name="upload-photo" value="Upload"/>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </footer>
+    </body>
+</html>

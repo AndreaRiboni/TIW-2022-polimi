@@ -1,0 +1,22 @@
+.with-margin{
+    margin: 5% 5% 5% 5%;
+}
+
+.avatar-preview {
+    width: 60px; !important;
+    height: 60px; !important;
+}
+
+.maxwidth-thumbnail {
+    max-width: 300px;
+}
+
+.main-text {
+    font-family: 'Poppins', sans-serif;
+    font-size: calc(50% + 2vw + 2vh);
+}
+
+.thumbnail-margin {
+    margin-left: 1% !important;
+    margin-right: 1% !important;
+}
