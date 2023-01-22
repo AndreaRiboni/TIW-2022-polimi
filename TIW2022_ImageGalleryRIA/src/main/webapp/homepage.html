@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <title>Image Gallery - Homepage</title>
+
+    <script src="utils.js" charset="utf-8" defer></script>
+    <script src="ImageGalleryManagement.js" charset="utf-8" defer></script>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href="style.css" rel="stylesheet"/>
+
+    <!-- Font Awesome -->
+    <link
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+            rel="stylesheet"
+    />
+    <!-- Google Fonts -->
+    <link
+            href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+            rel="stylesheet"
+    />
+    <!-- MDB -->
+    <link
+            href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/4.0.0/mdb.min.css"
+            rel="stylesheet"
+    />
+    <!-- MDB -->
+    <script
+            type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/4.0.0/mdb.min.js"
+    ></script>
+    <!-- font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
+        <div class="container-fluid">
+            <div class="navbar-brand main-text">Image Gallery</div>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="homepage.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="./Logout">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="alert alert-danger" role="alert" id="id_alert" hidden></div>
+
+    <div class="row d-flex justify-content-center">
+        <div class="col-md-10">
+            <div class = "card mb-4">
+                <div class="card-body">
+                    <div class="card-title text-center fw-bold main-text">My albums</div>
+                    <table class="table align-middle mb-0 bg-white" id="my_albums">
+                        <thead class="bg-light">
+                        <tr>
+                            <th>Title</th>
+                            <th>Creation date</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody id = "myalbums_body">
+                        </tbody>
+                    </table>
+                    <div class="mt-4 text-center">
+                        <input type="button" class="btn btn-danger" value = "Update order" id="update-order-button" hidden/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row d-flex justify-content-center">
+        <div class="col-md-10">
+            <div class = "card mb-4">
+                <div class="card-body">
+                    <div class="card-title text-center fw-bold main-text">Other users' albums</div>
+                        <table class="table align-middle mb-0 bg-white" id="other_albums">
+                            <thead class="bg-light">
+                            <tr>
+                                <th>Title</th>
+                                <th>Creation date</th>
+                                <th>Creator</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody id = "otheralbums_body">
+                            </tbody>
+                        </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id = "selected_album" class="mt-4" hidden>
+        <div id="album-title-container" class="display-5 text-center"></div>
+        <div id="album-date-container" class="lead text-center"></div>
+
+        <div class="container">
+            <div class="row" id="five-thumbnails-container"></div>
+        </div>
+
+    </div>
+
+    <footer class="text-center text-lg-start bg-light text-muted mt-4">
+        <section class="d-flex justify-content-center justify-content-lg-between p-4 border-bottom" >
+            <div class="me-5 d-none d-lg-block">
+                ImageGallery
+            </div>
+        </section>
+
+        <section>
+            <div class="container text-center text-md-start mt-5 mb-2">
+                <div class="row mt-3">
+                    <div class="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4">
+                        <h6 class="text-uppercase fw-bold mb-4">
+                            <i class="far fa-images"></i> Create an album
+                        </h6>
+                        <form class="row row-cols-lg-auto g-3 align-items-center" method="POST" action="#">
+                            <label for="ca-title">Title</label><br>
+                            <input type="text" class="form-control rounded-0" id="ca-title" name="title" placeholder="My album" required maxlength="40">
+                            <input type="button" class="btn btn-danger" name="create-album" value="Create" id="create-album-button">
+                        </form>
+                    </div>
+
+                    <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
+                        <h6 class="text-uppercase fw-bold mb-4">
+                            <i class="far fa-image"></i> Upload a photo
+                        </h6>
+                        <form class="row row-cols-lg-auto g-3 align-items-center" method="POST" action="#" enctype="multipart/form-data">
+                            <label for="up-title">Title:</label><br>
+                            <input type="text" class="form-control rounded-0" id="up-title" name="title" placeholder="Photo title" maxlength="40" required><br>
+                            <label for="up-alt">Alt text:</label><br>
+                            <input type="text" class="form-control rounded-0" id="up-alt" name="alt" placeholder="Brief photo description"><br>
+                            <input type="file" class="form-control rounded-0" id="up-file" name="file" required accept="image/png, image/jpeg"/>
+                            <input type="button" class="btn btn-danger" name="create-album" value="Upload" id="upload-photo-button"/>
+                        </form>
+                    </div>
+
+                    <div class="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4" id="add-photo-in-album-container" hidden>
+                        <h6 class="text-uppercase fw-bold mb-4">
+                            <i class="far fa-images"></i> Add a photo in this album
+                        </h6>
+                        <form class="row row-cols-lg-auto g-3 align-items-center" method="POST" action="#">
+                            <label for="add-photo-in-album">Choose a photo:</label>
+                            <select name="photo-id" id="add-photo-in-album" class="form-control rounded-0" required>
+                            </select>
+                            <input type="button" class="btn btn-danger" name="upload-photo" value="Upload" id="add-photo-in-album-button"/>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </footer>
+
+
+    <!-- Button trigger modal -->
+    <button id="launch-modal-button" type="button" class="btn btn-primary" data-mdb-toggle="modal" data-mdb-target="#modalwindow" hidden>
+        Launch demo modal
+    </button>
+
+    <!-- Modal -->
+    <div class="modal fade" id="modalwindow" tabindex="-1" aria-labelledby="modalwindow" aria-hidden="true">
+        <div class="modal-dialog-full-width modal-dialog momodel modal-fluid">
+            <div class="modal-content-full-width modal-content">
+                <div class="modal-header-full-width   modal-header text-center">
+                    <div class="modal-title display-6 text-center" id="photo-title">Modal title</div>
+                    <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="lead text-center" id="photo-upload-date"></div>
+                    <div class="text-center">
+                        <img class="img-fluid" id="photo-hires"/>
+                    </div>
+                    <div id="photo-description" class="p text-center"></div>
+
+                    <div class="card-footer bg-light mt-2">
+                        <div class="text-center card-title lead"><i class="far fa-comment-alt"></i> Add comment</div>
+                        <form class="row gy-2 gx-3 d-flex justify-content-center align-items-center" method="POST" action="#">
+                            <div class="col-auto">
+                                <input type="text" class="form-control" name="comment" placeholder="Comment" minlength="1" id="add-comment-text" required/>
+                            </div>
+                            <div class="col-auto">
+                                <input type="button" class="btn btn-danger" name="add-comment" value="Add" id="add-comment-button"/>
+                            </div>
+                        </form>
+                        <div id="photo-comments-container">
+                            <div class="d-flex flex-start">
+                                <div class="rounded-circle shadow-1-strong me-3 d-flex justify-content-center align-items-center avatar-preview h1 bg-danger text-white"
+                                ></div>
+                                <div>
+                                    <h6 class="fw-bold mb-1">User</h6>
+                                    <div class="d-flex align-items-center mb-0">
+                                        <p class="mb-0">
+                                            data
+                                        </p>
+                                    </div>
+                                    <p class="mb-4">
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-mdb-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</body>
+</html>
